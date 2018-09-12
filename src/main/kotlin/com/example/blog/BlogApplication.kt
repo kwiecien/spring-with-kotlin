@@ -1,6 +1,7 @@
 package com.example.blog
 
 import com.samskivert.mustache.Mustache
+import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -11,6 +12,28 @@ class BlogApplication {
     @Bean
     fun mustacheCompiler(loader: Mustache.TemplateLoader?) =
             Mustache.compiler().escapeHTML(false).withLoader(loader)
+
+    @Bean
+    fun databaseInitializer(userRepository: UserRepository,
+                            articleRepository: ArticleRepository) = CommandLineRunner {
+        val kkwiecin = User("kkwiecin", "Krzysztof", "Kwiecinski")
+        userRepository.save(kkwiecin)
+
+        articleRepository.save(Article(
+                "Reactor Bismuth is out",
+                "Lorem ipsum",
+                "dolor **sit** amet https://projectreactor.io/",
+                kkwiecin,
+                1
+        ))
+        articleRepository.save(Article(
+                "Reactor Aluminium has landed",
+                "Lorem ipsum",
+                "dolor **sit** amet https://projectreactor.io/",
+                kkwiecin,
+                2
+        ))
+    }
 
 }
 
